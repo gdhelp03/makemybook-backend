@@ -1,0 +1,20 @@
+req.user={
+  _id: '689ee2207e999df5d02ec23a',
+  name: 'Gagandeep Singh',
+  email: 'gd.help97@gmail.com',
+  image: 'https://lh3.googleusercontent.com/a/ACg8ocJV_TipSXgjpKVHL9aqmh2yyWbBLhPL4B1aBdkhQToN77dmFw=s96-c',
+  iat: 1755243040,
+  exp: 1755329440
+}
+
+addGalery= {
+  _id: 689ef0b58cfd29fbf4eed2f0,
+  name: 'test2',
+  slug: 'test2',
+  userID: 689ee2207e999df5d02ec23a,
+  path: '689ee2207e999df5d02ec23a/test2',
+  external_id: 'cc566e2422896a8157258eebe81329d9d6',
+  createdAt: 2025-08-15T08:32:53.834Z,
+  updatedAt: 2025-08-15T08:32:53.834Z,
+  __v: 0
+}
