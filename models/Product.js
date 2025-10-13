@@ -45,8 +45,13 @@ const productSchema = new mongoose.Schema(
     stock: {
       type: Number,
       required: false,
+      default:1
     },
     photosRequired: {
+      type: Number,
+      required: false,
+    },
+     photosRequiredMax: {
       type: Number,
       required: false,
     },

@@ -7,6 +7,7 @@ const addProduct = async (req, res) => {
   try {
     const newProduct = new Product({
       ...req.body,
+      stock:1,
       // productId: cname + (count + 1),
       productId: req.body.productId
         ? req.body.productId
