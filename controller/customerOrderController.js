@@ -15,7 +15,6 @@ const { handleProductQuantity } = require("../lib/stock-controller/others");
 const customerInvoiceEmailBody = require("../lib/email-sender/templates/order-to-customer");
 
 const addOrder = async (req, res) => {
-  // console.log("addOrder", req.body);
   try {
      const steps = [
       {
@@ -145,19 +144,19 @@ const createPaymentIntent = async (req, res) => {
 const createOrderByRazorPay = async (req, res) => {
   try {
     const storeSetting = await Setting.findOne({ name: "storeSetting" });
-    console.log("createOrderByRazorPay", storeSetting?.setting);
+   // console.log("createOrderByRazorPay", storeSetting?.setting);
 
     const instance = new Razorpay({
       key_id: storeSetting?.setting?.razorpay_id,
       key_secret: storeSetting?.setting?.razorpay_secret,
     });
-    console.log("instance rzp",instance)
+   // console.log("instance rzp",instance)
     const options = {
       amount: req.body.amount * 100,
       currency: "INR",
     };
     const order = await instance.orders.create(options);
-    console.log("order status",order)
+  //  console.log("order status",order)
     if (!order)
     
       return res.status(500).send({
@@ -173,10 +172,12 @@ const createOrderByRazorPay = async (req, res) => {
 
 const addRazorpayOrder = async (req, res) => {
   try {
+    console.log("addrazorpayorder", req.body)
     const newOrder = new Order({
       ...req.body,
       user: req.user._id,
     });
+    console.log("new order data",newOrder)
     const order = await newOrder.save();
     res.status(201).send(order);
     handleProductQuantity(order.cart);

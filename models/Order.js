@@ -88,6 +88,7 @@ const orderSchema = new mongoose.Schema(
       required: true,
       ref:"Gallery",
     },
+    selectedImageList: [{type: mongoose.Schema.Types.Mixed,    required: true,}],
     currentStep:{  type: Number, default:null},
     currentStepStatus:{type:String,default:null},
     steps: [stepFields],
