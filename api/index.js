@@ -18,9 +18,9 @@ const currencyRoutes = require("../routes/currencyRoutes");
 const languageRoutes = require("../routes/languageRoutes");
 const notificationRoutes = require("../routes/notificationRoutes");
 const { isAuth, isAdmin } = require("../config/auth");
-const galleryRoutes=require("../routes/galleryRoutes")
-const gallerySharingRoutes=require("../routes/gallerySharingRoutes")
-const galleryStreamRoutes=require("../routes/galleryStreamRoutes")
+const galleryRoutes = require("../routes/galleryRoutes");
+const gallerySharingRoutes = require("../routes/gallerySharingRoutes");
+const galleryStreamRoutes = require("../routes/galleryStreamRoutes");
 
 connectDB();
 const app = express();
@@ -28,12 +28,16 @@ app.set("trust proxy", 1);
 
 app.use(express.json({ limit: "4mb" }));
 app.use(helmet());
-app.options("*", cors()); 
+app.options("*", cors());
 app.use(cors());
 
-//root route
+// root + health
 app.get("/", (req, res) => {
-  res.send("App works properly!");
+  res.type("text/plain").send("App works properly!");
+});
+
+app.get("/health", (req, res) => {
+  res.type("text/plain").send("OK");
 });
 
 app.use("/api/products/", productRoutes);
@@ -47,14 +51,14 @@ app.use("/api/currency/", isAuth, currencyRoutes);
 app.use("/api/language/", languageRoutes);
 app.use("/api/notification/", isAuth, notificationRoutes);
 
-app.use("/api/cloudinary/",isAuth, galleryRoutes);
-app.use("/api/gshare/", isAuth,gallerySharingRoutes)
+app.use("/api/cloudinary/", isAuth, galleryRoutes);
+app.use("/api/gshare/", isAuth, gallerySharingRoutes);
 app.use("/api/stream/", galleryStreamRoutes);
-app.use("/api/gallery/",isAuth, galleryRoutes);
+app.use("/api/gallery/", isAuth, galleryRoutes);
 
 //if you not use admin dashboard then these two route will not needed.
 app.use("/api/admin/", adminRoutes);
-app.use("/api/orders/",isAuth, orderRoutes);
+app.use("/api/orders/", isAuth, orderRoutes);
 // app.use("/api/orders/", orderRoutes);
 
 // Use express's default error handling middleware
