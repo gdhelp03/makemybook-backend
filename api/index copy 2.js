@@ -37,13 +37,6 @@ app.use(cors());
 // root + health
 app.get("/", (req, res) => {
   res.type("text/plain").send("App works properly!");
-<<<<<<< HEAD
-});
-
-app.get("/health", (req, res) => {
-  res.type("text/plain").send("OK");
-=======
->>>>>>> 77a72eb69973b418f28f6227327d73be9a698d13
 });
 
 app.get("/health", (req, res) => {
