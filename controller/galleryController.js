@@ -83,7 +83,7 @@ const getGallerySignature = async (req, res) => {
 async function getImageCountByPrefix(prefix) {
   let count = 0;
   let nextCursor = null;
-
+  console.log("aaaaaaaaa")
   do {
     const result = await cloudinary.api.resources({
       type: "upload",
@@ -225,9 +225,11 @@ const getGallerySignatureBySlug = async (req, res) => {
 
 const getImagesFromFolder = async (req, res) => {
   const userID = req.user._id;
-  let folderPath = '';
+  // Folder logic
+  let folderPath = "";
   try {
     const galleryDetail = req.body.slug;
+
     if (!galleryDetail) {
       return res.status(400).json({ message: "Gallery detail is required" });
     }
@@ -237,6 +239,7 @@ const getImagesFromFolder = async (req, res) => {
       return res.status(400).json({ message: "Gallery slug is required" });
     }
 
+
     if (galleryDetail.sharedGallery === false) {
       folderPath = `${userID.toString()}/${slug}`;
     } else {
@@ -245,18 +248,72 @@ const getImagesFromFolder = async (req, res) => {
       }
       folderPath = `${galleryDetail.userID.toString()}/${slug}`;
     }
+
+    // Fetch all images
     const result = await cloudinary.search
       .expression(`folder:${folderPath} AND resource_type:image`)
-      .sort_by('public_id', 'desc')
+      .sort_by("public_id", "desc")
+      .max_results(500)
       .execute();
 
-    res.status(200).json(result.resources || []);
+    // Add thumbnail URL to each resource
+    const images = result.resources.map(img => {
+      const original = img.secure_url;
+      const thumbnail = original.replace(
+        "/upload/",
+        "/upload/w_300,h_300,c_fill/"
+      );
+
+      return {
+        ...img,
+        thumbnail_url: thumbnail
+      };
+    });
+    console.log("images",images)
+    res.status(200).json(images);
 
   } catch (error) {
     console.error("Error fetching images:", error);
     res.status(500).json({ message: "Failed to fetch images", error: error.message });
   }
 };
+
+
+
+// const getImagesFromFolder = async (req, res) => {
+//   const userID = req.user._id;
+//   let folderPath = '';
+//   try {
+//     const galleryDetail = req.body.slug;
+//     if (!galleryDetail) {
+//       return res.status(400).json({ message: "Gallery detail is required" });
+//     }
+
+//     const slug = galleryDetail.slug;
+//     if (!slug) {
+//       return res.status(400).json({ message: "Gallery slug is required" });
+//     }
+
+//     if (galleryDetail.sharedGallery === false) {
+//       folderPath = `${userID.toString()}/${slug}`;
+//     } else {
+//       if (!galleryDetail.userID) {
+//         return res.status(400).json({ message: "UserID is required for shared gallery" });
+//       }
+//       folderPath = `${galleryDetail.userID.toString()}/${slug}`;
+//     }
+//     const result = await cloudinary.search
+//       .expression(`folder:${folderPath} AND resource_type:image`)
+//       .sort_by('public_id', 'desc')
+//       .execute();
+
+//     res.status(200).json(result.resources || []);
+
+//   } catch (error) {
+//     console.error("Error fetching images:", error);
+//     res.status(500).json({ message: "Failed to fetch images", error: error.message });
+//   }
+// };
 
 const deleteImagesFromCloudinary = async (req, res) => {
   try {
